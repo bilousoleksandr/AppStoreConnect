@@ -40,7 +40,7 @@ let project = Project(
             sources: ["Targets/AppStoreConnect/Sources/**"],
             resources: ["Targets/AppStoreConnect/Resources/**"],
             dependencies: [
-                Dependencies.ThirdParty.appStoreConnect,
+                Dependencies.ThirdParty.appStoreConnect
             ]
 //            settings: .settings(configurations: [
 //                .debug(name: .debug, xcconfig: "Configs/Common.xcconfig"),
@@ -60,13 +60,13 @@ let project = Project(
         .init(
             name: "AppStoreConnectKit",
             destinations: .macOS,
-            product: .staticFramework,
+            product: .framework,
             bundleId: "com.bilous.AppStoreConnectKit"
         ),
         .init(
             name: "AppStoreConnectUI",
             destinations: .macOS,
-            product: .staticFramework,
+            product: .framework,
             bundleId: "com.bilous.AppStoreConnectUI"
         ),
     ],
