@@ -1,10 +1,18 @@
 {
-  "originHash" : "1c6aaf134255c47387ee8b7c08356e8b621989821ca647a7e4db611b9c0c375b",
   "pins" : [
+    {
+      "identity" : "alamofire",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Alamofire/Alamofire",
+      "state" : {
+        "revision" : "f455c2975872ccd2d9c81594c658af65716e9b9a",
+        "version" : "5.9.1"
+      }
+    },
     {
       "identity" : "appstoreconnect-swift-sdk",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/AvdLee/appstoreconnect-swift-sdk.git",
+      "location" : "https://github.com/AvdLee/appstoreconnect-swift-sdk",
       "state" : {
         "revision" : "2fb0578789a559a72782149d175ea5cf4184751c",
         "version" : "3.2.0"
@@ -29,5 +37,5 @@
       }
     }
   ],
-  "version" : 3
+  "version" : 2
 }

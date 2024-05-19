@@ -26,11 +26,8 @@ let localHelper = LocalHelper(name: "MyPlugin")
 // Creates our project using a helper function defined in ProjectDescriptionHelpers
 let project = Project(
     name: "AppStoreConnect",
-    packages: [
-        .remote(url: "https://github.com/AvdLee/appstoreconnect-swift-sdk.git", requirement: .upToNextMajor(from: "3.2.0"))
-    ],
     targets: [
-        .init(
+        .target(
             name: "AppStoreConnect",
             destinations: .macOS,
             product: .app,
@@ -40,14 +37,12 @@ let project = Project(
             sources: ["Targets/AppStoreConnect/Sources/**"],
             resources: ["Targets/AppStoreConnect/Resources/**"],
             dependencies: [
-                Dependencies.ThirdParty.appStoreConnect
+                Dependencies.ThirdParty.appStoreConnect,
+                Dependencies.Internal.appStoreConnectKit,
+                Dependencies.Internal.appStoreConnectUI,
             ]
-//            settings: .settings(configurations: [
-//                .debug(name: .debug, xcconfig: "Configs/Common.xcconfig"),
-//                .release(name: .release, xcconfig: "Configs/Common.xcconfig")
-//            ])
         ),
-        .init(
+        .target(
             name: "AppStoreConnectTests",
             destinations: .macOS,
             product: .unitTests,
@@ -57,27 +52,37 @@ let project = Project(
             resources: [],
             dependencies: [.target(name: "AppStoreConnect")]
         ),
-        .init(
+        .target(
             name: "AppStoreConnectKit",
             destinations: .macOS,
             product: .framework,
-            bundleId: "com.bilous.AppStoreConnectKit"
+            bundleId: "com.bilous.AppStoreConnectKit",
+            deploymentTargets: .macOS("11.0"),
+            sources: ["Targets/AppStoreConnectKit/Sources/**"]
         ),
-        .init(
+        .target(
             name: "AppStoreConnectUI",
             destinations: .macOS,
             product: .framework,
-            bundleId: "com.bilous.AppStoreConnectUI"
+            bundleId: "com.bilous.AppStoreConnectUI",
+            deploymentTargets: .macOS("11.0"),
+            sources: ["Targets/AppStoreConnectUI/Sources/**"]
         ),
     ],
     additionalFiles: [
         .glob(pattern: "*.md"),
-//        .glob(pattern: "**/*.xcconfig")
-    ]
+        .glob(pattern: "**/*.xcconfig")
+    ],
+    resourceSynthesizers: [.assets()]
 )
 
 enum Dependencies {
     enum ThirdParty {
-        static let appStoreConnect = TargetDependency.package(product: "AppStoreConnect-Swift-SDK", type: .runtime)
+        static let appStoreConnect = TargetDependency.external(name: "AppStoreConnect-Swift-SDK")
+    }
+
+    enum Internal {
+        static let appStoreConnectKit = TargetDependency.target(name: "AppStoreConnectKit")
+        static let appStoreConnectUI = TargetDependency.target(name: "AppStoreConnectUI")
     }
 }

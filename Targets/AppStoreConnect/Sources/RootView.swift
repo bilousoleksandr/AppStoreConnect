@@ -6,15 +6,16 @@
 //
 
 import SwiftUI
+import AppStoreConnectUI
+import AppStoreConnect_Swift_SDK
 
 struct RootView: View {
     var body: some View {
         VStack {
-            Button("Hello") {
-                print("Hello")
-            }
+            CustomButton()
         }
         .frame(width: 500, height: 500)
+        .foregroundColor(AppStoreConnectAsset.new.swiftUIColor)
     }
 }
 
