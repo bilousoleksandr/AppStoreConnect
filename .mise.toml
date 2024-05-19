@@ -1,2 +1,4 @@
 [tools]
 tuist = "latest"
+sourcery = "latest"
+swiftlint = "latest"
