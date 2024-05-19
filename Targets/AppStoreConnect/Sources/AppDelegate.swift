@@ -1,26 +1,19 @@
-import UIKit
-import AppStoreConnectKit
-import AppStoreConnectUI
+import Cocoa
+import SwiftUI
+import AppStoreConnect_Swift_SDK
 
-@main
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate {
+    private let window = NSWindow()
 
-    var window: UIWindow?
+    func applicationDidFinishLaunching(_ aNotification: Notification) {
+        window.level = .floating
+        window.title = "Hello"
+        window.makeKeyAndOrderFront(nil)
+        window.makeMain()
+        window.contentViewController = NSHostingController(rootView: RootView())
+    }
 
-    func application(
-        _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
-    ) -> Bool {
-        window = UIWindow(frame: UIScreen.main.bounds)
-        let viewController = UIViewController()
-        viewController.view.backgroundColor = .white
-        window?.rootViewController = viewController
-        window?.makeKeyAndVisible()
-        
-        AppStoreConnectKit.hello()
-        AppStoreConnectUI.hello()
-
-        return true
+    func applicationWillTerminate(_ aNotification: Notification) {
     }
 
 }
