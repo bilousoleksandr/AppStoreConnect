@@ -32,12 +32,11 @@ let project = Project(
             destinations: .macOS,
             product: .app,
             bundleId: "com.bilous.AppStoreConnect",
-            deploymentTargets: .macOS("11.0"),
+            deploymentTargets: .macOS("14.0"),
             infoPlist: .file(path: "Targets/AppStoreConnect/AppStoreConnect-Info.plist"),
             sources: ["Targets/AppStoreConnect/Sources/**"],
             resources: ["Targets/AppStoreConnect/Resources/**"],
             dependencies: [
-                Dependencies.ThirdParty.appStoreConnect,
                 Dependencies.Internal.appStoreConnectKit,
                 Dependencies.Internal.appStoreConnectUI,
             ]
@@ -57,15 +56,29 @@ let project = Project(
             destinations: .macOS,
             product: .framework,
             bundleId: "com.bilous.AppStoreConnectKit",
-            deploymentTargets: .macOS("11.0"),
-            sources: ["Targets/AppStoreConnectKit/Sources/**"]
+            deploymentTargets: .macOS("14.0"),
+            sources: ["Targets/AppStoreConnectKit/Sources/**"],
+            dependencies: [
+                Dependencies.Internal.appStoreConnectAuth,
+            ]
+        ),
+        .target(
+            name: "AppStoreConnectAuth",
+            destinations: .macOS,
+            product: .framework,
+            bundleId: "com.bilous.AppStoreConnectAuth",
+            deploymentTargets: .macOS("14.0"),
+            sources: ["Targets/AppStoreConnectAuth/Sources/**"],
+            dependencies: [
+                Dependencies.ThirdParty.appStoreConnect,
+            ]
         ),
         .target(
             name: "AppStoreConnectUI",
             destinations: .macOS,
             product: .framework,
             bundleId: "com.bilous.AppStoreConnectUI",
-            deploymentTargets: .macOS("11.0"),
+            deploymentTargets: .macOS("14.0"),
             sources: ["Targets/AppStoreConnectUI/Sources/**"]
         ),
     ],
@@ -84,5 +97,6 @@ enum Dependencies {
     enum Internal {
         static let appStoreConnectKit = TargetDependency.target(name: "AppStoreConnectKit")
         static let appStoreConnectUI = TargetDependency.target(name: "AppStoreConnectUI")
+        static let appStoreConnectAuth = TargetDependency.target(name: "AppStoreConnectAuth")
     }
 }
