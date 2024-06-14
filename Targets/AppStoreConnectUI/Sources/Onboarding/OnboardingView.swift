@@ -8,7 +8,6 @@
 import SwiftUI
 
 public struct OnboardingView: View {
-    
     @StateObject var viewModel: OnboardingViewModel
     
     public init(viewModel: OnboardingViewModel) {
@@ -17,7 +16,11 @@ public struct OnboardingView: View {
     
     public var body: some View {
         VStack {
-            Text("This is Onboarding")
+            Text("Onboarding with random number \(Int.random(in: 0...Int.max))")
+            Button("Finish onboarding") {
+                viewModel.dispatchAction(.finishOnboarding)
+            }
         }
+        .frame(width: 680, height: 400)
     }
 }

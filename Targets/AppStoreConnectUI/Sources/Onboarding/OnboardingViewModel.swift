@@ -8,11 +8,31 @@
 import Foundation
 
 public final class OnboardingViewModel: ObservableObject {
+    // FIXME: - Replace with keyValue storage
+    private let userDefaults: UserDefaults
     private let onboarding: Onboarding
-    
-    public init(onboarding: Onboarding) {
+    private var finishOnboarding: () -> Void
+
+    public init(
+        onboarding: Onboarding,
+        userDefaults: UserDefaults,
+        finishOnboarding: @escaping () -> Void
+    ) {
         self.onboarding = onboarding
-        
-        OnboardingView(viewModel: self)
+        self.userDefaults = userDefaults
+        self.finishOnboarding = finishOnboarding
+    }
+}
+
+extension OnboardingViewModel {
+    enum Action {
+        case finishOnboarding
+    }
+
+    func dispatchAction(_ action: Action) {
+        switch action {
+        case .finishOnboarding:
+            finishOnboarding()
+        }
     }
 }
