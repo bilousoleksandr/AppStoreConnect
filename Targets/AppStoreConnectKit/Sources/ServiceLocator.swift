@@ -8,8 +8,8 @@
 import Foundation
 
 public protocol ServiceLocator {
-    func resolve<T>() -> T?
-    func resolve<T>(_ type: T.Type) -> T?
+    func resolve<T>() -> T
+    func resolve<T>(_ type: T.Type) -> T
 }
 
 public final class ServiceLocatorImpl: ServiceLocator {
@@ -23,17 +23,23 @@ public final class ServiceLocatorImpl: ServiceLocator {
     }
     
     public func register<T>(service: T, type: T.Type) {
-        let key = typeName(T.self)
+        let key = typeName(type)
         services[key] = service
     }
 
-    public func resolve<T>() -> T? {
+    public func resolve<T>() -> T {
         let key = typeName(T.self)
-        return services[key] as? T
+        guard let service = services[key] as? T else {
+            fatalError("Missing registered service")
+        }
+        return service
     }
     
-    public func resolve<T>(_ type: T.Type) -> T? {
+    public func resolve<T>(_ type: T.Type) -> T {
         let key = typeName(T.self)
-        return services[key] as? T
+        guard let service = services[key] as? T else {
+            fatalError("Missing registered service for name: \(key)")
+        }
+        return service
     }
 }
