@@ -30,7 +30,7 @@ public final class ServiceLocatorImpl: ServiceLocator {
     public func resolve<T>() -> T {
         let key = typeName(T.self)
         guard let service = services[key] as? T else {
-            fatalError("Missing registered service")
+            preconditionFailure("Missing registered service")
         }
         return service
     }
@@ -38,7 +38,7 @@ public final class ServiceLocatorImpl: ServiceLocator {
     public func resolve<T>(_ type: T.Type) -> T {
         let key = typeName(T.self)
         guard let service = services[key] as? T else {
-            fatalError("Missing registered service for name: \(key)")
+            preconditionFailure("Missing registered service for name: \(key)")
         }
         return service
     }
