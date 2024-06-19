@@ -7,13 +7,13 @@
 
 import SwiftUI
 import AppStoreConnectUI
-import AppStoreConnect_Swift_SDK
+import DesignKit
 
 struct RootView: View {
     var body: some View {
         MainView()
-        .frame(width: 500, height: 500)
-        .foregroundColor(AppStoreConnectAsset.new.swiftUIColor)
+            .frame(width: 500, height: 500)
+            .foregroundColor(DesignKitAsset.Colors.new.swiftUIColor)
     }
 }
 

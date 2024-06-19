@@ -8,6 +8,7 @@
 import Foundation
 import AppKit
 import AppStoreConnectKit
+import AppStoreConnectUI
 
 protocol OnboardingRoutable: AnyObject {
     func finishOnboarding()

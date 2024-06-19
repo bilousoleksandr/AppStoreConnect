@@ -31,6 +31,7 @@ let project = Project.app(
         .init(
             name: "AppStoreConnect",
             product: .app,
+            infoPlist: .file(path: "Targets/AppStoreConnect/AppStoreConnect-Info.plist"),
             dependencies: [
                 .Internal.appStoreConnectKit,
                 .Internal.appStoreConnectUI,
@@ -41,8 +42,8 @@ let project = Project.app(
         .init(name: InternalTargetName.appStoreConnectKit.name),
         .init(name: InternalTargetName.appStoreConnectUI.name),
         .init(name: InternalTargetName.appStoreConnectAuth.name),
-        .init(name: InternalTargetName.designKit.name),
-        .init(name: InternalTargetName.L10N.name)
+        .init(name: InternalTargetName.designKit.name, hasResources: true),
+        .init(name: InternalTargetName.L10N.name, hasResources: true)
     ]
 )
 
@@ -54,7 +55,7 @@ enum InternalTargetName: String {
     case designKit
     case L10N
 
-    var name: String { rawValue.capitalized }
+    var name: String { rawValue.capitalizedSentence }
 }
 
 extension TargetDependency {
@@ -71,3 +72,14 @@ extension TargetDependency {
     }
 }
 
+
+extension String {
+    var capitalizedSentence: String {
+        // 1
+        let firstLetter = self.prefix(1).capitalized
+        // 2
+        let remainingLetters = self.dropFirst()
+        // 3
+        return firstLetter + remainingLetters
+    }
+}

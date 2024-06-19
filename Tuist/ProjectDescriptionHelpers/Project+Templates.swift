@@ -37,6 +37,7 @@ extension Project {
             product: configuration.product,
             bundleId: configuration.baseBundleId + "." + configuration.name,
             deploymentTargets: configuration.deploymentTargets,
+            infoPlist: configuration.infoPlist,
             sources: ["Targets/\(configuration.name)/Sources/**"],
             resources: configuration.hasResources ? ["Targets/\(configuration.name)/Resources/**"] : [],
             dependencies: configuration.dependencies
@@ -50,14 +51,16 @@ public struct ProductConfiguration {
     public let product: Product
     public let deploymentTargets: ProjectDescription.DeploymentTargets?
     public let baseBundleId: String
+    public let infoPlist: InfoPlist?
     public let dependencies: [TargetDependency]
     public let hasResources: Bool
 
     public init(
         name: String,
-        product: Product = .framework,
+        product: Product = .dynamicLibrary,
         deploymentTargets: ProjectDescription.DeploymentTargets? = .macOS("14.0"),
         baseBundleId: String = Project.Constants.baseBundleIdentifier,
+        infoPlist: InfoPlist? = nil,
         dependencies: [TargetDependency] = [],
         hasResources: Bool = false
     ) {
@@ -65,6 +68,7 @@ public struct ProductConfiguration {
         self.product = product
         self.deploymentTargets = deploymentTargets
         self.baseBundleId = baseBundleId
+        self.infoPlist = infoPlist
         self.dependencies = dependencies
         self.hasResources = hasResources
     }

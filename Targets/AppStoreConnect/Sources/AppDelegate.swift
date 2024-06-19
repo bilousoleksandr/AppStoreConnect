@@ -1,6 +1,5 @@
 import Cocoa
 import SwiftUI
-import AppStoreConnect_Swift_SDK
 import AppStoreConnectKit
 
 class AppDelegate: NSObject, NSApplicationDelegate {
