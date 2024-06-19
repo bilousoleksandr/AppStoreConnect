@@ -28,7 +28,7 @@ let project = Project.app(
     name: "AppStoreConnect",
     destinations: .macOS,
     additionalTargets: [
-        .init(
+        ProductConfiguration(
             name: "AppStoreConnect",
             product: .app,
             infoPlist: .file(path: "Targets/AppStoreConnect/AppStoreConnect-Info.plist"),
@@ -39,11 +39,11 @@ let project = Project.app(
                 .Internal.localizations,
             ]
         ),
-        .init(name: InternalTargetName.appStoreConnectKit.name),
-        .init(name: InternalTargetName.appStoreConnectUI.name),
-        .init(name: InternalTargetName.appStoreConnectAuth.name),
-        .init(name: InternalTargetName.designKit.name, hasResources: true),
-        .init(name: InternalTargetName.L10N.name, hasResources: true)
+        ProductConfiguration(name: InternalTargetName.appStoreConnectKit.name),
+        ProductConfiguration(name: InternalTargetName.appStoreConnectUI.name),
+        ProductConfiguration(name: InternalTargetName.appStoreConnectAuth.name),
+        ProductConfiguration(name: InternalTargetName.designKit.name, hasResources: true),
+        ProductConfiguration(name: InternalTargetName.L10N.name, hasResources: true)
     ]
 )
 
