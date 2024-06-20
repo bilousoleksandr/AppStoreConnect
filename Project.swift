@@ -44,6 +44,10 @@ let project = Project.app(
         ProductConfiguration(name: InternalTargetName.appStoreConnectAuth.target),
         ProductConfiguration(name: InternalTargetName.designKit.target, hasResources: true),
         ProductConfiguration(name: InternalTargetName.L10N.target, hasResources: true),
+        ModuleConfiguration(
+            name: InternalTargetName.localStorage.target,
+            dependencies: []
+        )
     ]
 )
 
@@ -54,6 +58,7 @@ enum InternalTargetName: String {
     case appStoreConnectAuth
     case designKit
     case L10N
+    case localStorage
 
     var API: String { rawValue.capitalizedSentence + "API" }
     var target: String { rawValue.capitalizedSentence }
@@ -71,17 +76,5 @@ extension TargetDependency {
         static let appStoreConnectAuth = TargetDependency.target(name: InternalTargetName.appStoreConnectAuth.target)
         static let designKit = TargetDependency.target(name: InternalTargetName.designKit.target)
         static let localizations = TargetDependency.target(name: InternalTargetName.L10N.target)
-    }
-}
-
-
-extension String {
-    var capitalizedSentence: String {
-        // 1
-        let firstLetter = self.prefix(1).capitalized
-        // 2
-        let remainingLetters = self.dropFirst()
-        // 3
-        return firstLetter + remainingLetters
     }
 }

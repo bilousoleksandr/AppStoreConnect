@@ -37,40 +37,43 @@ extension ModuleConfiguration: TargetConvertiableConfiguration {
     public var productTarget: [ProjectDescription.Target] {
         [
             .target(
-                name: name + "API",
+                name: Module.API.makeName(name),
                 destinations: .macOS,
                 product: product,
-                bundleId: baseBundleId + "." + name,
+                bundleId: Module.API.makeBundleID(baseBundleId, name),
                 deploymentTargets: deploymentTargets,
-                sources: ["Targets/\(name)Module/API/**"],
-                dependencies: dependencies
+                sources: ["Targets/\(name)Module/\(Module.API.suffix)/**"]
             ),
             .target(
-                name: name + "Mocks",
+                name: Module.mocks.makeName(name),
                 destinations: .macOS,
                 product: product,
-                bundleId: baseBundleId + "." + name,
+                bundleId: Module.mocks.makeBundleID(baseBundleId, name),
                 deploymentTargets: deploymentTargets,
-                sources: ["Targets/\(name)Module/Mocks/**"],
-                dependencies: dependencies
+                sources: ["Targets/\(name)Module/\(Module.mocks.suffix)/**"],
+                dependencies: [.target(name: Module.API.makeName(name))]
             ),
             .target(
                 name: name,
                 destinations: .macOS,
                 product: product,
-                bundleId: baseBundleId + "." + name,
+                bundleId: Module.sources.makeBundleID(baseBundleId, name),
                 deploymentTargets: deploymentTargets,
-                sources: ["Targets/\(name)Module/Sources/**"],
-                dependencies: dependencies
+                sources: ["Targets/\(name)Module/\(Module.sources.suffix)/**"],
+                dependencies: dependencies + [.target(name: Module.API.makeName(name))]
             ),
             .target(
-                name: name + "Tests",
+                name: Module.tests.makeName(name),
                 destinations: .macOS,
                 product: .unitTests,
-                bundleId: baseBundleId + "." + name + "Tests",
+                bundleId: Module.tests.makeBundleID(baseBundleId, name),
                 deploymentTargets: deploymentTargets,
-                sources: ["Targets/\(name)Module/Tests/**"],
-                dependencies: dependencies
+                sources: ["Targets/\(name)Module/\(Module.tests.suffix)/**"],
+                dependencies: [
+                    .target(name: Module.mocks.makeName(name)),
+                    .target(name: Module.API.makeName(name)),
+                    .target(name: Module.sources.makeName(name)),
+                ]
             ),
         ]
     }
