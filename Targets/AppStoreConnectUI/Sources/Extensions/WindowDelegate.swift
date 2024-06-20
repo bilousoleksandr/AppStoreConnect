@@ -8,14 +8,14 @@
 import Foundation
 import AppKit
 
-final class WindowDelegate: NSObject, NSWindowDelegate {
-    var windowWillCloseAction: (() -> Void)?
+public final class WindowDelegate: NSObject, NSWindowDelegate {
+    public var windowWillCloseAction: (() -> Void)?
 
-    init(windowWillCloseAction: (() -> Void)? = nil) {
+    public init(windowWillCloseAction: (() -> Void)? = nil) {
         self.windowWillCloseAction = windowWillCloseAction
     }
 
-    func windowWillClose(_ notification: Notification) {
+    public func windowWillClose(_ notification: Notification) {
         windowWillCloseAction?()
     }
 }

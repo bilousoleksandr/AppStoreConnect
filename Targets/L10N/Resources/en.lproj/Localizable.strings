@@ -1,0 +1,9 @@
+/* 
+  Localizable.strings
+  AppStoreConnect
+
+  Created by Oleksandr Bilous on 19.06.2024.
+  Copyright © 2024 com.bilous. All rights reserved.
+*/
+
+"main-window.title" = "AppStoreConnect";

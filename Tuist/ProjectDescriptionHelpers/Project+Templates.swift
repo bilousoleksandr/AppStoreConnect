@@ -7,68 +7,76 @@ import ProjectDescription
 
 extension Project {
     /// Helper function to create the Project for this ExampleApp
-//    public static func app(name: String, destinations: Destinations, additionalTargets: [String]) -> Project {
-//        var targets = makeAppTargets(name: name,
-//                                     destinations: destinations,
-//                                     dependencies: additionalTargets.map { TargetDependency.target(name: $0) })
-//        targets += additionalTargets.flatMap({ makeFrameworkTargets(name: $0, destinations: destinations) })
-//        return Project(name: name,
-//                       organizationName: "tuist.io",
-//                       targets: targets)
-//    }
+    public static func app(
+        name: String,
+        destinations: Destinations,
+        organizationName: String = "com.bilous",
+        additionalTargets: [ProductConfiguration]
+    ) -> Project {
+        return Project(
+            name: name,
+            organizationName: organizationName,
+            targets: additionalTargets.map { makeProductTarget(from: $0) },
+            additionalFiles: [
+                .glob(pattern: "*.md"),
+                .glob(pattern: "**/*.xcconfig")
+            ],
+            resourceSynthesizers: [
+                .assets(),
+                .strings()
+            ]
+        )
+    }
 
-    // MARK: - Private
+    static func makeProductTarget(
+        from configuration: ProductConfiguration
+    ) -> ProjectDescription.Target {
+        .target(
+            name: configuration.name,
+            destinations: .macOS,
+            product: configuration.product,
+            bundleId: configuration.baseBundleId + "." + configuration.name,
+            deploymentTargets: configuration.deploymentTargets,
+            infoPlist: configuration.infoPlist,
+            sources: ["Targets/\(configuration.name)/Sources/**"],
+            resources: configuration.hasResources ? ["Targets/\(configuration.name)/Resources/**"] : [],
+            dependencies: configuration.dependencies
+        )
+    }
+}
 
-    /// Helper function to create a framework target and an associated unit test target
-//    private static func makeFrameworkTargets(name: String, destinations: Destinations) -> [Target] {
-//        let sources = Target(name: name,
-//                destinations: destinations,
-//                product: .framework,
-//                bundleId: "io.tuist.\(name)",
-//                infoPlist: .default,
-//                sources: ["Targets/\(name)/Sources/**"],
-//                resources: [],
-//                dependencies: [])
-//        let tests = Target(name: "\(name)Tests",
-//                destinations: destinations,
-//                product: .unitTests,
-//                bundleId: "io.tuist.\(name)Tests",
-//                infoPlist: .default,
-//                sources: ["Targets/\(name)/Tests/**"],
-//                resources: [],
-//                dependencies: [.target(name: name)])
-//        return [sources, tests]
-//    }
-//
-//    /// Helper function to create the application target and the unit test target.
-//    private static func makeAppTargets(name: String, destinations: Destinations, dependencies: [TargetDependency]) -> [Target] {
-//        let infoPlist: [String: Plist.Value] = [
-//            "CFBundleShortVersionString": "1.0",
-//            "CFBundleVersion": "1",
-//            "UILaunchStoryboardName": "LaunchScreen"
-//            ]
-//
-//        let mainTarget = Target(
-//            name: name,
-//            destinations: destinations,
-//            product: .app,
-//            bundleId: "io.tuist.\(name)",
-//            infoPlist: .extendingDefault(with: infoPlist),
-//            sources: ["Targets/\(name)/Sources/**"],
-//            resources: ["Targets/\(name)/Resources/**"],
-//            dependencies: dependencies
-//        )
-//
-//        let testTarget = Target(
-//            name: "\(name)Tests",
-//            destinations: destinations,
-//            product: .unitTests,
-//            bundleId: "io.tuist.\(name)Tests",
-//            infoPlist: .default,
-//            sources: ["Targets/\(name)/Tests/**"],
-//            dependencies: [
-//                .target(name: "\(name)")
-//        ])
-//        return [mainTarget, testTarget]
-//    }
+
+public struct ProductConfiguration {
+    public let name: String
+    public let product: Product
+    public let deploymentTargets: ProjectDescription.DeploymentTargets?
+    public let baseBundleId: String
+    public let infoPlist: InfoPlist?
+    public let dependencies: [TargetDependency]
+    public let hasResources: Bool
+
+    public init(
+        name: String,
+        product: Product = .dynamicLibrary,
+        deploymentTargets: ProjectDescription.DeploymentTargets? = .macOS("14.0"),
+        baseBundleId: String = Project.Constants.baseBundleIdentifier,
+        infoPlist: InfoPlist? = nil,
+        dependencies: [TargetDependency] = [],
+        hasResources: Bool = false
+    ) {
+        self.name = name
+        self.product = product
+        self.deploymentTargets = deploymentTargets
+        self.baseBundleId = baseBundleId
+        self.infoPlist = infoPlist
+        self.dependencies = dependencies
+        self.hasResources = hasResources
+    }
+}
+
+
+extension Project {
+    public enum Constants {
+        public static let baseBundleIdentifier = "com.bilous"
+    }
 }
