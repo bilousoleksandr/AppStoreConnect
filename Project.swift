@@ -39,11 +39,11 @@ let project = Project.app(
                 .Internal.localizations,
             ]
         ),
-        ProductConfiguration(name: InternalTargetName.appStoreConnectKit.name),
-        ProductConfiguration(name: InternalTargetName.appStoreConnectUI.name),
-        ProductConfiguration(name: InternalTargetName.appStoreConnectAuth.name),
-        ProductConfiguration(name: InternalTargetName.designKit.name, hasResources: true),
-        ProductConfiguration(name: InternalTargetName.L10N.name, hasResources: true)
+        ProductConfiguration(name: InternalTargetName.appStoreConnectKit.target),
+        ProductConfiguration(name: InternalTargetName.appStoreConnectUI.target),
+        ProductConfiguration(name: InternalTargetName.appStoreConnectAuth.target),
+        ProductConfiguration(name: InternalTargetName.designKit.target, hasResources: true),
+        ProductConfiguration(name: InternalTargetName.L10N.target, hasResources: true),
     ]
 )
 
@@ -55,7 +55,9 @@ enum InternalTargetName: String {
     case designKit
     case L10N
 
-    var name: String { rawValue.capitalizedSentence }
+    var API: String { rawValue.capitalizedSentence + "API" }
+    var target: String { rawValue.capitalizedSentence }
+    var tests: String { rawValue.capitalizedSentence + "Tests" }
 }
 
 extension TargetDependency {
@@ -64,11 +66,11 @@ extension TargetDependency {
     }
 
     enum Internal {
-        static let appStoreConnectKit = TargetDependency.target(name: InternalTargetName.appStoreConnectKit.name)
-        static let appStoreConnectUI = TargetDependency.target(name: InternalTargetName.appStoreConnectUI.name)
-        static let appStoreConnectAuth = TargetDependency.target(name: InternalTargetName.appStoreConnectAuth.name)
-        static let designKit = TargetDependency.target(name: InternalTargetName.designKit.name)
-        static let localizations = TargetDependency.target(name: InternalTargetName.L10N.name)
+        static let appStoreConnectKit = TargetDependency.target(name: InternalTargetName.appStoreConnectKit.target)
+        static let appStoreConnectUI = TargetDependency.target(name: InternalTargetName.appStoreConnectUI.target)
+        static let appStoreConnectAuth = TargetDependency.target(name: InternalTargetName.appStoreConnectAuth.target)
+        static let designKit = TargetDependency.target(name: InternalTargetName.designKit.target)
+        static let localizations = TargetDependency.target(name: InternalTargetName.L10N.target)
     }
 }
 
