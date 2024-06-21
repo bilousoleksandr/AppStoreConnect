@@ -13,10 +13,11 @@ SOURCERY_DIR=$(dirname "${SOURCERY_PATH}")
 SOURCERY_COMMUNITY_TEMPLATES="${SOURCERY_DIR}/../Templates"
 LOCAL_TEMPLATES="$(dirname "$0")/Templates"
 
+echo "Templates found"
 ls -l "$SOURCERY_COMMUNITY_TEMPLATES"
 ls -l "$LOCAL_TEMPLATES"
 
-TEMPLATES_PATH=(
+TEMPLATES_PATHS=(
     "$SOURCERY_COMMUNITY_TEMPLATES"
     "$LOCAL_TEMPLATES"
 )
@@ -36,16 +37,24 @@ get_basename_without_extension() {
 
 generate_mocks() {
     local dir_path="$1"
-    GENERATED_DIR_PATH="${dir}/Generated"
-    echo $GENERATED_DIR_PATH
-    mkdir -p "$GENERATED_DIR_PATH"
+    GENERATED_DIR_PATH="${dir_path}/Generated"
+    mkdir -p "${GENERATED_DIR_PATH}"
 
+    for TEMPLATES_PATH in "${TEMPLATES_PATHS[@]}"; do
+        for template in $(find "$TEMPLATES_PATH" -type f -name "*stencil"); do
+            TEMPLATE_NAME=$(get_basename_without_extension "${template}")
+            touch "${GENERATED_DIR_PATH}/${TEMPLATE_NAME}.generated.swift"
+        done
+    done 
 }
 
-for dir in $(find "$SEARCH_PATH" -type d -name "Sources"); do
-    generate_mocks "${dir}"
-done
+find_and_generate_mocks_for_dirs() {
+    local pattern="$1"
+    for target_directory_path in $(find "$SEARCH_PATH" -type d -name "${pattern}"); do
+        echo $target_directory_path
+        generate_mocks "${target_directory_path}"
+    done
+}
 
-for dir in $(find "$SEARCH_PATH" -type d -name "Mocks"); do
-    generate_mocks "${dir}"
-done
+find_and_generate_mocks_for_dirs "Sources"
+find_and_generate_mocks_for_dirs "Mocks"
