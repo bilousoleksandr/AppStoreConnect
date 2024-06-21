@@ -12,7 +12,7 @@ import LocalStorageMocks
 @testable import LocalStorage
 
 final class KeyValueStorageTests: XCTestCase {
-    private lazy var sut: KeyValueStorageAPI = KeyValueStorageAPIMock()
+    private lazy var sut = KeyValueStorageAPIMock()
 
     func testExample() throws {
         // GIVEN

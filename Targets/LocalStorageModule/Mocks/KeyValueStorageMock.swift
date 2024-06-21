@@ -11,7 +11,7 @@ import LocalStorageAPI
 
 // MARK: - KeyValueStorageAPIMock -
 
-public final class KeyValueStorageAPIMock: KeyValueStorageAPI {
+public final class KeyValueStorageAPIMock: KeyValueStorageProtocol {
 
     // MARK: - setValue
 

@@ -9,4 +9,4 @@
 import Foundation
 import LocalStorageAPI
 
-extension UserDefaults: KeyValueStorageAPI {}
+extension UserDefaults: KeyValueStorageProtocol {}
