@@ -18,6 +18,6 @@ let package = Package(
     name: "PackageName",
     dependencies: [
         .package(url: "https://github.com/Alamofire/Alamofire", from: "5.0.0"),
-        .package(url: "https://github.com/AvdLee/appstoreconnect-swift-sdk", from: "3.2.0")
+        .package(url: "https://github.com/AvdLee/appstoreconnect-swift-sdk", from: "3.3.0")
     ]
 )

@@ -6,27 +6,49 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
-struct AuthView: View {
-    @StateObject var viewModel: AuthViewModel
+public struct AuthView: View {
+    @StateObject private var viewModel: AuthViewModel
+    @State private var isImporting: Bool = false
     
-    var body: some View {
+    public init(viewModel: AuthViewModel) {
+        self._viewModel = StateObject(wrappedValue: viewModel)
+    }
+    
+    public var body: some View {
         VStack(alignment: .center) {
             VStack(alignment: .leading) {
                 AuthInputField(title: "Issuer ID", binding: $viewModel.issuerID)
-                AuthInputField(title: "Private Key ID", binding: $viewModel.privateKeyID)
-                AuthInputField(title: "Private Key", binding: $viewModel.privateKey)
             }
             .padding()
             
+            Button("Auth Private Key File") {
+                isImporting = true
+            }
+            .fileImporter(isPresented: $isImporting,
+                          allowedContentTypes: [UTType(filenameExtension: "p8")!],
+                          onCompletion: { result in
+                
+                switch result {
+                case .success(let url):
+                    viewModel.privateKeyFileURL = url
+                case .failure(let error):
+                    print("AuthView failed to pick  Private Key File with error: \(error)")
+                }
+                
+                isImporting = false
+            })
+            
             Button("Authorize") {
                 Task {
-                    try await viewModel.authorize()
+                    await viewModel.authorize()
                 }
             }
             .disabled(!viewModel.canAuthorize)
         }
         .padding()
+        .frame(width: 680, height: 400)
     }
 }
 
