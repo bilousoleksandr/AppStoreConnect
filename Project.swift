@@ -39,47 +39,56 @@ let project = Project.app(
                 .Internal.localizations,
             ]
         ),
-        ProductConfiguration(name: InternalTargetName.appStoreConnectKit.name),
-        ProductConfiguration(name: InternalTargetName.appStoreConnectUI.name),
-        ProductConfiguration(name: InternalTargetName.appStoreConnectAuth.name),
-        ProductConfiguration(name: InternalTargetName.designKit.name, hasResources: true),
-        ProductConfiguration(name: InternalTargetName.L10N.name, hasResources: true)
+        ProductConfiguration(name: InternalTargetName.appStoreConnectKit.target),
+        ProductConfiguration(name: InternalTargetName.appStoreConnectUI.target),
+        ProductConfiguration(name: InternalTargetName.appStoreConnectAuth.target),
+        ProductConfiguration(name: InternalTargetName.designKit.target, hasResources: true),
+        ProductConfiguration(name: InternalTargetName.L10N.target, hasResources: true),
+        ModuleConfiguration(
+            name: InternalTargetName.localStorage.target,
+            moduleScripts: [
+                .mocks([
+                    .sourcery(.init(imports: [InternalTargetName.localStorage.API]))
+                ]),
+                .module([
+                    .sourcery(.init(imports: [
+                        InternalTargetName.localStorage.API
+                    ]))
+                ]),
+            ]
+        )
     ]
 )
 
 
+// MARK: - InternalTargetName
 enum InternalTargetName: String {
     case appStoreConnectKit
     case appStoreConnectUI
     case appStoreConnectAuth
     case designKit
     case L10N
+    case localStorage
 
-    var name: String { rawValue.capitalizedSentence }
+    var API: String { ModuleType.API.makeName(rawValue.capitalizedSentence) }
+    var target: String { rawValue.capitalizedSentence }
+    var tests: String { ModuleType.tests.makeName(rawValue.capitalizedSentence) }
 }
 
+// MARK: - ThirdPary Dependencies
 extension TargetDependency {
     enum ThirdParty {
         static let appStoreConnect = TargetDependency.external(name: "AppStoreConnect-Swift-SDK")
     }
-
-    enum Internal {
-        static let appStoreConnectKit = TargetDependency.target(name: InternalTargetName.appStoreConnectKit.name)
-        static let appStoreConnectUI = TargetDependency.target(name: InternalTargetName.appStoreConnectUI.name)
-        static let appStoreConnectAuth = TargetDependency.target(name: InternalTargetName.appStoreConnectAuth.name)
-        static let designKit = TargetDependency.target(name: InternalTargetName.designKit.name)
-        static let localizations = TargetDependency.target(name: InternalTargetName.L10N.name)
-    }
 }
 
-
-extension String {
-    var capitalizedSentence: String {
-        // 1
-        let firstLetter = self.prefix(1).capitalized
-        // 2
-        let remainingLetters = self.dropFirst()
-        // 3
-        return firstLetter + remainingLetters
+// MARK: - Internal Dependencies
+extension TargetDependency {
+    enum Internal {
+        static let appStoreConnectKit = TargetDependency.target(name: InternalTargetName.appStoreConnectKit.target)
+        static let appStoreConnectUI = TargetDependency.target(name: InternalTargetName.appStoreConnectUI.target)
+        static let appStoreConnectAuth = TargetDependency.target(name: InternalTargetName.appStoreConnectAuth.target)
+        static let designKit = TargetDependency.target(name: InternalTargetName.designKit.target)
+        static let localizations = TargetDependency.target(name: InternalTargetName.L10N.target)
     }
 }

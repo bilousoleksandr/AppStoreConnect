@@ -1,5 +1,5 @@
 
-name: BuildProject
+name: Build
 
 on:
   pull_request:
@@ -31,8 +31,8 @@ jobs:
       run: tuist install
 
     - name: Tuist generate
-      run: tuist generate --no-open
+      run: make generate
 
-    - name: Build Project
-      run: tuist build
+    - name: 📦 Build AppStoreConnect
+      run: tuist build AppStoreConnect
 
