@@ -52,6 +52,7 @@ let project = Project.app(
 )
 
 
+// MARK: - InternalTargetName
 enum InternalTargetName: String {
     case appStoreConnectKit
     case appStoreConnectUI
@@ -65,11 +66,15 @@ enum InternalTargetName: String {
     var tests: String { Module.tests.makeName(rawValue.capitalizedSentence) }
 }
 
+// MARK: - ThirdPary Dependencies
 extension TargetDependency {
     enum ThirdParty {
         static let appStoreConnect = TargetDependency.external(name: "AppStoreConnect-Swift-SDK")
     }
+}
 
+// MARK: - Internal Dependencies
+extension TargetDependency {
     enum Internal {
         static let appStoreConnectKit = TargetDependency.target(name: InternalTargetName.appStoreConnectKit.target)
         static let appStoreConnectUI = TargetDependency.target(name: InternalTargetName.appStoreConnectUI.target)
