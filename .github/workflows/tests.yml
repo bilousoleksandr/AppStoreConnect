@@ -1,1 +1,37 @@
 
+name: UnitTests
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Mise
+      run: |
+        curl https://mise.run | sh
+        echo "$HOME/.local/share/mise/bin" >> $GITHUB_PATH
+        echo "$HOME/.local/share/mise/shims" >> $GITHUB_PATH
+
+    - name: Xcode Select Version
+      uses: mobiledevops/xcode-select-version-action@v1
+      with:
+        xcode-select-version: 15.4
+    
+    - name: Install mise dependencies
+      run: mise install
+
+    - name: Tuist install
+      run: tuist install
+
+    - name: Tuist generate
+      run: tuist generate --no-open
+
+    - name: UnitTests
+      run: tuist test

@@ -33,6 +33,6 @@ jobs:
     - name: Tuist generate
       run: tuist generate --no-open
 
-    - name: Build Project
-      run: tuist build
+    - name: Build AppStoreConnect
+      run: tuist build AppStoreConnect
 

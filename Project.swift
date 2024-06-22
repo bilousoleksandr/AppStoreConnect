@@ -60,9 +60,9 @@ enum InternalTargetName: String {
     case L10N
     case localStorage
 
-    var API: String { rawValue.capitalizedSentence + "API" }
+    var API: String { Module.API.makeName(rawValue.capitalizedSentence) }
     var target: String { rawValue.capitalizedSentence }
-    var tests: String { rawValue.capitalizedSentence + "Tests" }
+    var tests: String { Module.tests.makeName(rawValue.capitalizedSentence) }
 }
 
 extension TargetDependency {

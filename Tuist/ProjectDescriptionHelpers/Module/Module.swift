@@ -7,15 +7,15 @@
 
 import Foundation
 
-enum Module: String {
+public enum Module: String {
     case API
     case sources
     case mocks
     case tests
 
-    var suffix: String { rawValue.capitalizedSentence }
+    public var suffix: String { rawValue.capitalizedSentence }
 
-    func makeName(_ baseName: String) -> String {
+    public func makeName(_ baseName: String) -> String {
         switch self {
         case .sources:
             baseName
