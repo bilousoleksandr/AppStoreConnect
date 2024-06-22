@@ -41,7 +41,7 @@ generate_mocks() {
     mkdir -p "${GENERATED_DIR_PATH}"
 
     for TEMPLATES_PATH in "${TEMPLATES_PATHS[@]}"; do
-        for template in $(find "$TEMPLATES_PATH" -type f -name "*stencil"); do
+        for template in $(find "$TEMPLATES_PATH" -type f); do
             TEMPLATE_NAME=$(get_basename_without_extension "${template}")
             touch "${GENERATED_DIR_PATH}/${TEMPLATE_NAME}.generated.swift"
         done
