@@ -33,5 +33,5 @@ jobs:
     - name: Tuist generate
       run: make generate
 
-    - name: UnitTests
+    - name: 🧑‍🔬 Unit Tests
       run: tuist test

@@ -33,6 +33,6 @@ jobs:
     - name: Tuist generate
       run: make generate
 
-    - name: Build AppStoreConnect
+    - name: 📦 Build AppStoreConnect
       run: tuist build AppStoreConnect
 
