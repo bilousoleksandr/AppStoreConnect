@@ -46,7 +46,16 @@ let project = Project.app(
         ProductConfiguration(name: InternalTargetName.L10N.target, hasResources: true),
         ModuleConfiguration(
             name: InternalTargetName.localStorage.target,
-            dependencies: []
+            moduleScripts: [
+                .mocks([
+                    .sourcery(.init(imports: [InternalTargetName.localStorage.API]))
+                ]),
+                .module([
+                    .sourcery(.init(imports: [
+                        InternalTargetName.localStorage.API
+                    ]))
+                ]),
+            ]
         )
     ]
 )
@@ -61,9 +70,9 @@ enum InternalTargetName: String {
     case L10N
     case localStorage
 
-    var API: String { Module.API.makeName(rawValue.capitalizedSentence) }
+    var API: String { ModuleType.API.makeName(rawValue.capitalizedSentence) }
     var target: String { rawValue.capitalizedSentence }
-    var tests: String { Module.tests.makeName(rawValue.capitalizedSentence) }
+    var tests: String { ModuleType.tests.makeName(rawValue.capitalizedSentence) }
 }
 
 // MARK: - ThirdPary Dependencies

@@ -1,15 +1,52 @@
-{# A template to generate randomizable init #}
+// swiftlint:disable line_length
+// swiftlint:disable variable_name
+
+import Foundation
+#if os(iOS) || os(tvOS) || os(watchOS)
+import UIKit
+#elseif os(OSX)
+import AppKit
+#endif
+
+{% for import in argument.autoMockableImports %}
+import {{ import }}
+{% endfor %}
+
+extension Int {
+    public static func random() -> Int {
+        Int(arc4random())
+    }
+}
+
+extension Double {
+    public static func random() -> Double {
+        Double(arc4random())
+    }
+}
+
+extension String {
+    public static func random() -> String {
+        UUID().uuidString
+    }
+}
+
+extension Date {
+    public static func random() -> Date {
+        Date(timeIntervalSince1970: .random())
+    }
+}
 
 {% for type in types.structs where type|annotated:"Randomizable" %}
+
 {% set spacing %}{% if type.parentName %}    {% endif %}{% endset %}
-{% map type.storedVariables into parameters using var %}{{ var.name }}: {{ var.typeName }}{% if var.defaultValue %} = {{var.defaultValue}}{% elif var.typeName.isOptional %} = nil{% endif %}{% endmap %}
+{% map type.storedVariables into parameters using var %}{{ var.name }}: {{ var.typeName }}{% endmap %}
 extension {{ type.name }} { 
-// sourcery:inline:auto:{{ type.name }}.Randomizable
-{{spacing}}    {{ type.accessLevel }} random({{ parameters|join:" = .random(), " }} = .random()) {
-{{spacing}}        {% for variable in type.storedVariables %}
-{{spacing}}        self.{{ variable.name }} = {{ variable.name }}
-{{spacing}}        {% endfor %}
-{{spacing}}    }
+    {{ type.accessLevel }} static func random({{ parameters|join:" = .random(), " }} = .random()) -> {{ type.name }} {
+        .init(
+            {% map type.storedVariables into initVars using var %}{{ var.name }}: {{ var.name }}{% endmap %}
+            {{ initVars|join:", " }}
+        )
+    }
 }
-// sourcery:end
+
 {% endfor %}
