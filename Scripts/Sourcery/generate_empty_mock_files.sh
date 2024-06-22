@@ -58,3 +58,6 @@ find_and_generate_mocks_for_dirs() {
 
 find_and_generate_mocks_for_dirs "Sources"
 find_and_generate_mocks_for_dirs "Mocks"
+find_and_generate_mocks_for_dirs "API"
+find_and_generate_mocks_for_dirs "Module"
+find_and_generate_mocks_for_dirs "Tests"
