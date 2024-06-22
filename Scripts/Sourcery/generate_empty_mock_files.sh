@@ -50,14 +50,22 @@ generate_mocks() {
 
 find_and_generate_mocks_for_dirs() {
     local pattern="$1"
-    for target_directory_path in $(find "$SEARCH_PATH" -type d -name "${pattern}"); do
+    for target_directory_path in $(find "$SEARCH_PATH" -maxdepth 2 -type d -name "${pattern}"); do
         echo $target_directory_path
         generate_mocks "${target_directory_path}"
     done
 }
 
+find_and_generate_mocks_for_modules() {
+    local pattern="$1"
+    for target_directory_path in $(find "$SEARCH_PATH" -maxdepth 1 -type d -name "**Module"); do
+        echo $target_directory_path
+        generate_mocks "${target_directory_path}/Mocks"
+        generate_mocks "${target_directory_path}/API"
+        generate_mocks "${target_directory_path}/Module"
+        generate_mocks "${target_directory_path}/Tests"
+    done
+}
+
 find_and_generate_mocks_for_dirs "Sources"
-find_and_generate_mocks_for_dirs "Mocks"
-find_and_generate_mocks_for_dirs "API"
-find_and_generate_mocks_for_dirs "Module"
-find_and_generate_mocks_for_dirs "Tests"
+find_and_generate_mocks_for_modules
