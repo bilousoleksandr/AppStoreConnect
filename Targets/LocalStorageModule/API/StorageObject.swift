@@ -8,7 +8,7 @@
 
 import Foundation
 
-// sourcery: AutoLenses
+// sourcery: Randomizable
 public struct StorageObject: Identifiable {
     public let id: Int
     public let name: String
