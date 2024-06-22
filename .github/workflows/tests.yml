@@ -31,7 +31,7 @@ jobs:
       run: tuist install
 
     - name: Tuist generate
-      run: tuist generate --no-open
+      run: make generate
 
     - name: UnitTests
       run: tuist test
