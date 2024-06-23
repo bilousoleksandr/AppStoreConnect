@@ -19,7 +19,7 @@ public struct ProductConfiguration {
 
     public init(
         name: String,
-        product: Product = .dynamicLibrary,
+        product: Product = .framework,
         deploymentTargets: ProjectDescription.DeploymentTargets? = Project.Constants.deploymentsTarget,
         baseBundleId: String = Project.Constants.baseBundleIdentifier,
         infoPlist: InfoPlist? = nil,
@@ -45,7 +45,7 @@ extension ProductConfiguration: TargetConvertiableConfiguration {
                 product: product,
                 bundleId: baseBundleId + "." + name,
                 deploymentTargets: deploymentTargets,
-                infoPlist: infoPlist,
+                infoPlist: infoPlist ?? .default,
                 sources: ["Targets/\(name)/Sources/**"],
                 resources: hasResources ? ["Targets/\(name)/Resources/**"] : [],
                 dependencies: dependencies
