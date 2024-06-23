@@ -10,7 +10,7 @@ import AppKit
 import AppStoreConnectUI
 import SwiftUI
 import AppStoreConnectKit
-import AppStoreConnectAuth
+import AppStoreConnectAPI
 
 extension AuthorizationService: Authorization {
     

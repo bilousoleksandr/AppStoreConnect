@@ -35,14 +35,14 @@ let project = Project.app(
             dependencies: [
                 .Internal.appStoreConnectKit,
                 .Internal.appStoreConnectUI,
-                .Internal.appStoreConnectAuth,
+                .Internal.appStoreConnectAPI,
                 .Internal.designKit,
                 .Internal.localizations,
             ]
         ),
         ProductConfiguration(name: InternalTargetName.appStoreConnectKit.target),
         ProductConfiguration(name: InternalTargetName.appStoreConnectUI.target),
-        ProductConfiguration(name: InternalTargetName.appStoreConnectAuth.target,             
+        ProductConfiguration(name: InternalTargetName.appStoreConnectAPI.target,
                              dependencies: [
                                 .ThirdParty.appStoreConnect,
                              ]),
@@ -69,7 +69,7 @@ let project = Project.app(
 enum InternalTargetName: String {
     case appStoreConnectKit
     case appStoreConnectUI
-    case appStoreConnectAuth
+    case appStoreConnectAPI
     case designKit
     case L10N
     case localStorage
@@ -91,7 +91,7 @@ extension TargetDependency {
     enum Internal {
         static let appStoreConnectKit = TargetDependency.target(name: InternalTargetName.appStoreConnectKit.target)
         static let appStoreConnectUI = TargetDependency.target(name: InternalTargetName.appStoreConnectUI.target)
-        static let appStoreConnectAuth = TargetDependency.target(name: InternalTargetName.appStoreConnectAuth.target)
+        static let appStoreConnectAPI = TargetDependency.target(name: InternalTargetName.appStoreConnectAPI.target)
         static let designKit = TargetDependency.target(name: InternalTargetName.designKit.target)
         static let localizations = TargetDependency.target(name: InternalTargetName.L10N.target)
     }
