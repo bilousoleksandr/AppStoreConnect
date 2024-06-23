@@ -35,13 +35,17 @@ let project = Project.app(
             dependencies: [
                 .Internal.appStoreConnectKit,
                 .Internal.appStoreConnectUI,
+                .Internal.appStoreConnectAuth,
                 .Internal.designKit,
                 .Internal.localizations,
             ]
         ),
         ProductConfiguration(name: InternalTargetName.appStoreConnectKit.target),
         ProductConfiguration(name: InternalTargetName.appStoreConnectUI.target),
-        ProductConfiguration(name: InternalTargetName.appStoreConnectAuth.target),
+        ProductConfiguration(name: InternalTargetName.appStoreConnectAuth.target,             
+                             dependencies: [
+                                .ThirdParty.appStoreConnect,
+                             ]),
         ProductConfiguration(name: InternalTargetName.designKit.target, hasResources: true),
         ProductConfiguration(name: InternalTargetName.L10N.target, hasResources: true),
         ModuleConfiguration(
