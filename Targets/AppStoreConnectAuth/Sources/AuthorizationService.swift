@@ -9,9 +9,7 @@ import Foundation
 import AppStoreConnect_Swift_SDK
 
 public final class AuthorizationService {
-    
-    private var apiProvider: APIProvider?
-    
+        
     public init() {}
     
     public func authorize(issuerID: String, privateKeyFileURL: URL) async throws {
@@ -19,7 +17,7 @@ public final class AuthorizationService {
             let configuration = try APIConfiguration(issuerID: issuerID,
                                                      privateKeyURL: privateKeyFileURL)
             
-            apiProvider = APIProvider(configuration: configuration)
+            let apiProvider = APIProvider(configuration: configuration)
             
             let request = APIEndpoint
                 .v1
@@ -30,9 +28,7 @@ public final class AuthorizationService {
                     limit: 5
                 ))
             
-            let apps = try await apiProvider!.request(request).data
-            
-            print("Did fetch \(apps.count) apps")
+            _ = try await apiProvider.request(request).data
         }
         catch {
             throw error
