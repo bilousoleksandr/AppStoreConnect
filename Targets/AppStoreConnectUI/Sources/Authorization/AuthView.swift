@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
+import L10N
 
 public struct AuthView: View {
     @StateObject private var viewModel: AuthViewModel
@@ -19,11 +20,11 @@ public struct AuthView: View {
     public var body: some View {
         VStack(alignment: .center) {
             VStack(alignment: .leading) {
-                AuthInputField(title: "Issuer ID", binding: $viewModel.issuerID)
+                AuthInputField(title: L10NStrings.Authorization.TextField.issuerId, binding: $viewModel.issuerID)
             }
             .padding()
             
-            Button("Auth Private Key File") {
+            Button(L10NStrings.Authorization.Button.privateKey) {
                 isImporting = true
             }
             .fileImporter(isPresented: $isImporting,

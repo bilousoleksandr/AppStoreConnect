@@ -41,8 +41,11 @@ let project = Project.app(
             ]
         ),
         ProductConfiguration(name: InternalTargetName.appStoreConnectKit.target),
-        ProductConfiguration(name: InternalTargetName.appStoreConnectUI.target),
-        ProductConfiguration(name: InternalTargetName.appStoreConnectAuth.target,             
+        ProductConfiguration(name: InternalTargetName.appStoreConnectUI.target,
+                             dependencies: [
+                                .Internal.localizations,
+                             ]),
+        ProductConfiguration(name: InternalTargetName.appStoreConnectAuth.target,
                              dependencies: [
                                 .ThirdParty.appStoreConnect,
                              ]),
