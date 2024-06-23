@@ -1,5 +1,5 @@
 
-name: Build
+name: Tests
 
 on:
   pull_request:
@@ -33,6 +33,5 @@ jobs:
     - name: Tuist generate
       run: make generate
 
-    - name: 📦 Build AppStoreConnect
-      run: tuist build AppStoreConnect
-
+    - name: 🧑‍🔬 Unit Tests
+      run: tuist test
