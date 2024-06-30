@@ -29,18 +29,26 @@ final class RootCoordinator: BaseCoordinator {
 
 extension RootCoordinator {
     private func startAuthorization() {
-        startOnboarding()
+        let authorizationCoordinator = AuthorizationCoordinator(serviceLocator: serviceLocator)
+        
+        self.addChild(authorizationCoordinator)
+
+        authorizationCoordinator.onFinish = { [weak self, weak authorizationCoordinator] in
+            authorizationCoordinator.map { self?.removeChild($0) }
+        }
+
+        authorizationCoordinator.start()
     }
 
     private func startOnboarding() {
-        let childCoordinator = OnboardingCoordinator(serviceLocator: serviceLocator)
-        self.addChild(childCoordinator)
+        let onboardingCoordinator = OnboardingCoordinator(serviceLocator: serviceLocator)
+        self.addChild(onboardingCoordinator)
 
-        childCoordinator.onFinish = { [weak self, weak childCoordinator] in
-            childCoordinator.map { self?.removeChild($0) }
+        onboardingCoordinator.onFinish = { [weak self, weak onboardingCoordinator] in
+            onboardingCoordinator.map { self?.removeChild($0) }
             self?.startAuthorization()
         }
 
-        childCoordinator.start()
+        onboardingCoordinator.start()
     }
 }

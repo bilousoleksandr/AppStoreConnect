@@ -7,9 +7,6 @@
 
 import Foundation
 
-
-typealias NewProtocol = KeyValueStorage & AuthorizationService
-
 protocol KeyValueStorage: ReadableKeyValueStorage {
     func setValue(_ value: Any?, forKey key: String)
 }
@@ -19,8 +16,3 @@ protocol ReadableKeyValueStorage: AnyObject {
 }
 
 extension UserDefaults: KeyValueStorage {}
-
-protocol AuthorizationService {
-    var isAuthorized: Bool { get } 
-    
-}

@@ -9,10 +9,9 @@ import Foundation
 import AppKit
 
 class BaseCoordinator: Coordinator {
-    private (set) var children: [Coordinator] = []
+    private(set) var children: [Coordinator] = []
     private(set) var rootController: NSViewController?
     var onFinish: (() -> Void)?
-
 
     init(_ rootController: NSViewController? = nil) {
         self.rootController = rootController

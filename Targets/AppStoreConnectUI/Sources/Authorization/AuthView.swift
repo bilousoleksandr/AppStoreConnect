@@ -6,27 +6,38 @@
 //
 
 import SwiftUI
+import L10N
+import DesignKit
 
-struct AuthView: View {
-    @StateObject var viewModel: AuthViewModel
+public struct AuthView: View {
+    @StateObject private var viewModel: AuthViewModel
     
-    var body: some View {
+    public init(viewModel: AuthViewModel) {
+        self._viewModel = StateObject(wrappedValue: viewModel)
+    }
+    
+    public var body: some View {
         VStack(alignment: .center) {
             VStack(alignment: .leading) {
-                AuthInputField(title: "Issuer ID", binding: $viewModel.issuerID)
-                AuthInputField(title: "Private Key ID", binding: $viewModel.privateKeyID)
-                AuthInputField(title: "Private Key", binding: $viewModel.privateKey)
+                AuthInputField(title: L10NStrings.Authorization.TextField.issuerId, binding: $viewModel.issuerID)
             }
             .padding()
             
-            Button("Authorize") {
-                Task {
-                    try await viewModel.authorize()
-                }
+            Button(L10NStrings.Authorization.Button.privateKey) {
+                viewModel.isImportingPrivateKey = true
             }
-            .disabled(!viewModel.canAuthorize)
+            .fileImporter(isPresented: $viewModel.isImportingPrivateKey,
+                          allowedContentTypes: viewModel.allowedContentTypes,
+                          onCompletion: viewModel.onImprotingPrivateKeyFileURL)
+            
+            AsyncButton(disabled: !viewModel.canAuthorize) {
+                await viewModel.authorize()
+            } label: {
+                Text(L10NStrings.Authorization.Button.authorize)
+            }            
         }
         .padding()
+        .frame(width: 680, height: 400)
     }
 }
 

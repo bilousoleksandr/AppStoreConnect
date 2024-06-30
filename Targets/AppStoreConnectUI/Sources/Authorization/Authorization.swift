@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol Authorization {
-    func authorize(issuerID: String, privateKeyID: String, privateKey: String) async throws
+    func authorize(issuerID: String, privateKeyFileURL: URL) async throws
 }
