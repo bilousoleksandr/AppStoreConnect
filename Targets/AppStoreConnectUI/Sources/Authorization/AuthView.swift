@@ -6,12 +6,11 @@
 //
 
 import SwiftUI
-import UniformTypeIdentifiers
 import L10N
+import DesignKit
 
 public struct AuthView: View {
     @StateObject private var viewModel: AuthViewModel
-    @State private var isImporting: Bool = false
     
     public init(viewModel: AuthViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel)
@@ -25,28 +24,17 @@ public struct AuthView: View {
             .padding()
             
             Button(L10NStrings.Authorization.Button.privateKey) {
-                isImporting = true
+                viewModel.isImportingPrivateKey = true
             }
-            .fileImporter(isPresented: $isImporting,
-                          allowedContentTypes: [UTType(filenameExtension: "p8")!],
-                          onCompletion: { result in
-                
-                switch result {
-                case .success(let url):
-                    viewModel.privateKeyFileURL = url
-                case .failure(let error):
-                    print("AuthView failed to pick  Private Key File with error: \(error)")
-                }
-                
-                isImporting = false
-            })
+            .fileImporter(isPresented: $viewModel.isImportingPrivateKey,
+                          allowedContentTypes: viewModel.allowedContentTypes,
+                          onCompletion: viewModel.onImprotingPrivateKeyFileURL)
             
-            Button("Authorize") {
-                Task {
-                    await viewModel.authorize()
-                }
-            }
-            .disabled(!viewModel.canAuthorize)
+            AsyncButton(disabled: !viewModel.canAuthorize) {
+                await viewModel.authorize()
+            } label: {
+                Text(L10NStrings.Authorization.Button.authorize)
+            }            
         }
         .padding()
         .frame(width: 680, height: 400)

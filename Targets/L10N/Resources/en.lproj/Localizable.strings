@@ -9,3 +9,4 @@
 "main-window.title" = "AppStoreConnect";
 "authorization.text-field.issuer-id" = "Issuer ID";
 "authorization.button.private-key" = "Auth Private Key File";
+"authorization.button.authorize" = "Authorize";
