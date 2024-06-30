@@ -34,4 +34,8 @@ public final class AuthorizationService {
             throw error
         }
     }
+    
+    func authorize(session: Session) async throws -> Bool {
+        false
+    }
 }

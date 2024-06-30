@@ -48,6 +48,7 @@ let project = Project.app(
         ProductConfiguration(name: InternalTargetName.appStoreConnectAuth.target,
                              dependencies: [
                                 .ThirdParty.appStoreConnect,
+                                .Internal.localStorageAPI
                              ]),
         ProductConfiguration(name: InternalTargetName.designKit.target, hasResources: true),
         ProductConfiguration(name: InternalTargetName.L10N.target, hasResources: true),
@@ -97,5 +98,6 @@ extension TargetDependency {
         static let appStoreConnectAuth = TargetDependency.target(name: InternalTargetName.appStoreConnectAuth.target)
         static let designKit = TargetDependency.target(name: InternalTargetName.designKit.target)
         static let localizations = TargetDependency.target(name: InternalTargetName.L10N.target)
+        static let localStorageAPI = TargetDependency.target(name: InternalTargetName.localStorage.API)
     }
 }

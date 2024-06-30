@@ -8,13 +8,27 @@
 import Foundation
 import AppKit
 import AppStoreConnectKit
+import LocalStorageAPI
 
 final class RootCoordinator: BaseCoordinator {
 
     var onboardingFlowCompleted: Bool = false
 
     override func start() {
-        startOnboarding()
+        
+        let storage = serviceLocator.resolve(KeyValueStorageProtocol.self)
+        
+        let launchesCount = storage.integer(forKey: StorageKeys.launchCount)
+
+        
+        if (launchesCount < 2) {
+            startOnboarding()
+            storage.setValue(true, forKey: "isFirstlaunch")
+        }
+        else {
+            startMain()
+        }
+        
     }
 
     private let serviceLocator: ServiceLocator
@@ -50,5 +64,20 @@ extension RootCoordinator {
         }
 
         onboardingCoordinator.start()
+    }
+    
+    private func startMain() {
+        let mainWindowCoordinator = MainWindowCoordinator(serviceLocator: serviceLocator, authorizationClosure: { [weak self] in
+            self?.startAuthorization()
+        })
+        self.addChild(mainWindowCoordinator)
+        
+//        mainWindowCoordinator.onFinish = { [weak self, weak mainWindowCoordinator] in
+//            onboardingCoordinator.map { self?.removeChild($0) }
+//            self?.startAuthorization()
+//            
+//        }
+        
+        mainWindowCoordinator.start()
     }
 }

@@ -11,4 +11,13 @@ import Foundation
 // sourcery: AutoMockable
 public protocol KeyValueStorageProtocol {
     func setValue(_ value: Any?, forKey key: String)
+    func value(forKey key: String) -> Any?
+    func integer(forKey key: String) -> Int
 }
+
+public enum StorageKeys {
+    public static let launchCount = "launchCount"
+}
+
+
+extension UserDefaults: KeyValueStorageProtocol {}
