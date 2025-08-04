@@ -1,4 +1,4 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.1
 import PackageDescription
 
 #if TUIST
@@ -16,7 +16,9 @@ let package = Package(
     name: "AppStoreConnect",
     dependencies: [
         // Add your own dependencies here:
-        // .package(url: "https://github.com/Alamofire/Alamofire", from: "5.0.0"),
+         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.21.0"),
+         .package(url: "https://github.com/evgenyneu/keychain-swift", from: "24.0.0"),
+         .package(url: "https://github.com/AvdLee/appstoreconnect-swift-sdk", from: "4.0.2"),
         // You can read more about dependencies here: https://docs.tuist.io/documentation/tuist/dependencies
     ]
 )

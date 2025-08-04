@@ -1,0 +1,8 @@
+// MARK: - Signing
+
+CODE_SIGN_STYLE                             = Manual
+DEVELOPMENT_TEAM                            = 4Y5NM4C9D2
+
+CODE_SIGN_IDENTITY_Debug                    = Apple Development
+CODE_SIGN_IDENTITY_Release                  = Apple Distribution: Oleksandr Bilous (4Y5NM4C9D2)
+CODE_SIGN_IDENTITY                          = $(CODE_SIGN_IDENTITY_$(CONFIGURATION))

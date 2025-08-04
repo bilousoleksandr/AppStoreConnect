@@ -1,0 +1,13 @@
+// MARK: - Signing
+
+#include "../../Configs/Common.xcconfig"
+#include "../../Configs/CodeSigning.xcconfig"
+
+// Icons
+
+ASSETCATALOG_COMPILER_APPICON_NAME                  = AppIcon
+
+// Versioning
+
+CURRENT_PROJECT_VERSION                             = 1
+MARKETING_VERSION                                   = 1.0

@@ -1,0 +1,25 @@
+#include "Common.xcconfig"
+
+ONLY_ACTIVE_ARCH = NO
+
+DEBUG_INFORMATION_FORMAT                = dwarf-with-dsym
+ENABLE_TESTABILITY                      = NO
+
+DEPLOYMENT_POSTPROCESSING               = YES
+CODE_PHASE_STRIP                        = YES
+STRIP_STYLE                             = non-global
+STRIP_INSTALLED_PRODUCT                 = YES
+
+GCC_OPTIMIZATION_LEVEL                  = s
+SWIFT_OPTIMIZATION_LEVEL                = -O
+SWIFT_COMPILATION_MODE                  = wholemodule
+ASSETCATALOG_COMPILER_OPTIMIZATION      = time
+
+
+
+ENABLE_NS_ASSERTION                     = NO
+
+RUN_CLANG_STATIC_ANALYZER               = NO
+
+CLANG_ENABLE_CODE_COVERADGE             = NO
+CLANG_COVERAGE_MAPPING                  = NO

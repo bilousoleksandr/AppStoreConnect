@@ -2,3 +2,4 @@
 pre-commit = "latest"
 sourcery = "latest"
 swiftlint = "latest"
+tuist = "latest"
