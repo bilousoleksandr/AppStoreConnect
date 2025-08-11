@@ -1,24 +1,48 @@
 import SwiftUI
+import ComposableArchitecture
 
-public struct ContentView: View {
-    @State var manager = ReviewsManager()
-    public init() {}
+struct ContentView: View {
+    let store: StoreOf<AppRoot>
 
-    public var body: some View {
-        Text("Hello, World!")
-            .padding()
-            .frame(minWidth: 400, minHeight: 400)
-            .onAppear {
-                Task { [manager] in
-                    try await manager.reviews()
+    var body: some View {
+        HStack {
+            VStack {
+                ForEach(store.appFeature.applications) { app in
+                    Button {
+                        print(app)
+                    } label: {
+                        VStack {
+                            Text(app.id)
+                            Text(app.name)
+                        }.border(.blue)
+                    }
                 }
             }
+            .frame(width: 250)
+            .frame(maxHeight: .infinity, alignment: .topLeading)
+            .border(.red)
+            ReviewView(store: store.scope(state: \.reviewsFeature, action: \.reviewsFeature))
+                .frame(maxWidth: .infinity)
+                .frame(maxHeight: .infinity)
+                .border(.green)
+        }
+        .task {
+            store.send(.appFeature(.loadApplications))
+        }
     }
 }
 
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+struct ReviewView: View {
+    let store: StoreOf<ReviewsFeature>
+    
+    var body: some View {
+        ScrollView {
+            VStack {
+                ForEach(store.reviews) { review in
+                    Text(review.title)
+                }
+            }
+        }
     }
 }

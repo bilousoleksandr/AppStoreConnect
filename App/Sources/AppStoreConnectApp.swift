@@ -1,10 +1,17 @@
 import SwiftUI
+import ComposableArchitecture
 
 @main
-struct AppStoreConnectApp: App {
+struct AppStoreConnectApp: SwiftUI.App {
+    let store = Store(initialState: AppRoot.State()) {
+        AppRoot()
+    }
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(store: store)
         }
     }
 }
+
+

@@ -10,7 +10,3 @@ struct SignInView: View {
 #Preview {
     SignInView()
 }
-
-import AppStoreConnect_Swift_SDK
-
-
