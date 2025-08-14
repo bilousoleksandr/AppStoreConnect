@@ -25,7 +25,7 @@ actor SessionManager {
 }
 
 
-final class ReviewsManager: Sendable {
+final class AppStoreManager: Sendable {
     private let sessionManager: SessionManager
     private let id = UUID()
     
@@ -65,17 +65,17 @@ final class ReviewsManager: Sendable {
         }
     }
     
-    func reviews() async throws -> [Review] {
+    func reviews(for appId: String) async throws -> [Review] {
         let request = APIEndpoint
             .v1
             .apps
-            .id("6502719436")
+            .id(appId)
             .customerReviews
             .get(parameters: .init(fieldsCustomerReviews: [
                 .createdDate, .body, .title, .reviewerNickname, .rating, .createdDate, .territory
             ]))
         let ratings = try await sessionManager.session(for: id).request(request).data
-        print("Did fetch \(ratings) apps")
+        print("Did fetch \(ratings.count) reviews for app \(appId)")
         return ratings.compactMap { rating -> Review? in
             do {
                 let attributes = try rating.attributes.get()
@@ -87,6 +87,42 @@ final class ReviewsManager: Sendable {
                     rating: attributes.rating.get(),
                     reviewerNickname: attributes.reviewerNickname.get(),
                     territoryCode: attributes.territory.get()
+                )
+            } catch {
+                return nil
+            }
+        }
+    }
+    
+    func appInfo(for appId: String) async throws -> [AppInfo] {
+        let request = APIEndpoint
+            .v1
+            .apps
+            .id(appId)
+            .appInfos
+            .get(parameters: .init(fieldsAppInfos: [
+                .appStoreAgeRating,
+                .appStoreState,
+                .brazilAgeRating,
+                .kidsAgeBand,
+                .primaryCategory,
+                .primarySubcategoryOne,
+                .primarySubcategoryTwo,
+                .secondaryCategory,
+                .secondarySubcategoryOne,
+                .secondarySubcategoryTwo
+            ]))
+        let appInfos = try await sessionManager.session(for: id).request(request).data
+        print("Did fetch \(appInfos.count) app infos")
+        return appInfos.compactMap { appInfo -> AppInfo? in
+            do {
+                let attributes = try appInfo.attributes.get()
+                return try AppInfo(
+                    id: appInfo.id,
+                    appStoreAgeRating: attributes.appStoreAgeRating.get(),
+                    appStoreState: attributes.appStoreState.get(),
+                    brazilAgeRating: attributes.brazilAgeRating.get(),
+                    kidsAgeBand: attributes.kidsAgeBand.get()
                 )
             } catch {
                 return nil
@@ -111,6 +147,14 @@ struct Application: Hashable, Equatable, Identifiable {
     let name: String
     let bundleID: String
     let sku: String
+}
+
+struct AppInfo: Hashable, Equatable, Identifiable {
+    let id: String
+    let appStoreAgeRating: AppStoreAgeRating
+    let appStoreState: AppStoreVersionState
+    let brazilAgeRating: BrazilAgeRating
+    let kidsAgeBand: KidsAgeBand
 }
 
 extension Optional {

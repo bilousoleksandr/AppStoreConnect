@@ -9,22 +9,72 @@ struct ContentView: View {
             VStack {
                 ForEach(store.appFeature.applications) { app in
                     Button {
-                        print(app)
+                        store.send(.appDetailFeature(.selectApp(app)))
                     } label: {
                         VStack {
                             Text(app.id)
                             Text(app.name)
-                        }.border(.blue)
+                        }
+                        .padding()
+                        .background(store.appDetailFeature.selectedApp?.id == app.id ? Color.blue.opacity(0.3) : Color.clear)
+                        .cornerRadius(8)
+                        .border(.blue)
                     }
                 }
             }
             .frame(width: 250)
             .frame(maxHeight: .infinity, alignment: .topLeading)
             .border(.red)
-            ReviewView(store: store.scope(state: \.reviewsFeature, action: \.reviewsFeature))
-                .frame(maxWidth: .infinity)
-                .frame(maxHeight: .infinity)
-                .border(.green)
+            
+            VStack {
+                if let selectedApp = store.appDetailFeature.selectedApp {
+                    // App header
+                    HStack {
+                        Text(selectedApp.name)
+                            .font(.title2)
+                            .fontWeight(.bold)
+                        Spacer()
+                    }
+                    .padding()
+                    
+                    // Toggle between Reviews and App Info
+                    Picker("View Type", selection: Binding(
+                        get: { store.appDetailFeature.selectedView },
+                        set: { store.send(.appDetailFeature(.selectView($0))) }
+                    )) {
+                        ForEach(ViewType.allCases, id: \.self) { viewType in
+                            Text(viewType.rawValue).tag(viewType)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .padding(.horizontal)
+                    
+                    // Content based on selected view
+                    if store.appDetailFeature.isLoading {
+                        ProgressView("Loading...")
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    } else if store.appDetailFeature.selectedView == .reviews {
+                        ReviewView(reviews: store.appDetailFeature.reviews)
+                            .frame(maxWidth: .infinity)
+                            .frame(maxHeight: .infinity)
+                            .border(.green)
+                    } else {
+                        AppInfoView(appInfos: store.appDetailFeature.appInfos)
+                            .frame(maxWidth: .infinity)
+                            .frame(maxHeight: .infinity)
+                            .border(.orange)
+                    }
+                } else {
+                    // No app selected
+                    VStack {
+                        Text("Select an app to view details")
+                            .font(.title2)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+            }
         }
         .task {
             store.send(.appFeature(.loadApplications))
@@ -34,15 +84,73 @@ struct ContentView: View {
 
 
 struct ReviewView: View {
-    let store: StoreOf<ReviewsFeature>
+    let reviews: [Review]
     
     var body: some View {
         ScrollView {
-            VStack {
-                ForEach(store.reviews) { review in
-                    Text(review.title)
+            VStack(alignment: .leading, spacing: 12) {
+                if reviews.isEmpty {
+                    Text("No reviews available for this app.")
+                        .foregroundColor(.secondary)
+                        .padding()
+                } else {
+                    ForEach(reviews) { review in
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Text(review.title)
+                                    .font(.headline)
+                                Spacer()
+                                Text("★ \(review.rating)")
+                                    .foregroundColor(.orange)
+                            }
+                            Text(review.body)
+                                .font(.body)
+                                .foregroundColor(.secondary)
+                            HStack {
+                                Text("By: \(review.reviewerNickname)")
+                                    .font(.caption)
+                                Spacer()
+                                Text(review.createdDate, style: .date)
+                                    .font(.caption)
+                            }
+                        }
+                        .padding()
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(8)
+                    }
                 }
             }
+            .padding()
+        }
+    }
+}
+
+struct AppInfoView: View {
+    let appInfos: [AppInfo]
+    
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                if appInfos.isEmpty {
+                    Text("No app info available for this app.")
+                        .foregroundColor(.secondary)
+                        .padding()
+                } else {
+                    ForEach(appInfos) { appInfo in
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("App Store Age Rating: \(appInfo.appStoreAgeRating.rawValue)")
+                                .font(.headline)
+                            Text("App Store State: \(appInfo.appStoreState.rawValue)")
+                            Text("Brazil Age Rating: \(appInfo.brazilAgeRating.rawValue)")
+                            Text("Kids Age Band: \(appInfo.kidsAgeBand.rawValue)")
+                        }
+                        .padding()
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(8)
+                    }
+                }
+            }
+            .padding()
         }
     }
 }
