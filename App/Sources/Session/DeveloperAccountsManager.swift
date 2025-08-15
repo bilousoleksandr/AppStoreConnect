@@ -1,10 +1,10 @@
 import Foundation
 @preconcurrency import AppStoreConnect_Swift_SDK
 
-actor SessionManager {
-    private var configurations: [Profile.ID: APIProvider] = [:]
+actor DeveloperAccountsManager {
+    private var configurations: [DeveloperAccount.ID: APIProvider] = [:]
     
-    func session(for profileID: Profile.ID) throws -> APIProvider {
+    func session(for profileID: DeveloperAccount.ID) throws -> APIProvider {
         if let configuration = configurations[profileID] {
             return configuration
         }
@@ -26,10 +26,10 @@ actor SessionManager {
 
 
 final class AppStoreManager: Sendable {
-    private let sessionManager: SessionManager
+    private let sessionManager: DeveloperAccountsManager
     private let id = UUID()
     
-    init(sessionManager: SessionManager = .init()) {
+    init(sessionManager: DeveloperAccountsManager = .init()) {
         self.sessionManager = sessionManager
     }
     
