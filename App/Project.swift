@@ -14,12 +14,12 @@ let project = Project(
             bundleId: "com.bilous.AppStoreConnect",
             deploymentTargets: .macOS("15.0"),
             infoPlist: .default,
-            sources: ["Sources/**"],
             resources: ["Resources/**"],
+            buildableFolders: [.folder("Sources")],
             dependencies: [
-                .external(name: "AppStoreConnect-Swift-SDK"),
-                .external(name: "ComposableArchitecture"),
-                .external(name: "KeychainSwift"),
+                .External.appStoreConnectSDK,
+                .External.composableArchitecture,
+                .External.keychainSwift,
             ],
             settings: .settings(
                 configurations: [
@@ -35,9 +35,17 @@ let project = Project(
             product: .unitTests,
             bundleId: "com.bilous.AppStoreConnectTests",
             infoPlist: .default,
-            sources: ["Tests/**"],
             resources: [],
+            buildableFolders: [.folder("Tests")],
             dependencies: [.target(name: "AppStoreConnect")]
         ),
     ]
 )
+
+extension TargetDependency {
+    enum External {
+        static let appStoreConnectSDK = TargetDependency.external(name: "AppStoreConnect-Swift-SDK")
+        static let composableArchitecture = TargetDependency.external(name: "ComposableArchitecture")
+        static let keychainSwift = TargetDependency.external(name: "KeychainSwift")
+    }
+}

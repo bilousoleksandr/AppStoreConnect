@@ -2,4 +2,4 @@
 pre-commit = "latest"
 sourcery = "latest"
 swiftlint = "latest"
-tuist = "latest"
+tuist = "4.64.2"

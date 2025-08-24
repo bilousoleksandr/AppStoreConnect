@@ -1,4 +1,5 @@
 import ComposableArchitecture
+
 @Reducer
 struct AppFeature {
     @Dependency(\.appStoreManager) var appStoreManager
@@ -45,10 +46,6 @@ struct AppFeature {
             }
         }
         .forEach(\.applicationFeatures, action: \.applicationFeature, element: ApplicationFeature.init)
-//        .forEach(\.applicationFeatures, action: \.applicationFeature)
-//        .forEach(\.applicationFeatures, action: /Action.applicationFeature) {
-//            ApplicationFeature()
-//        }
     }
 }
 
