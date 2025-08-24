@@ -65,10 +65,31 @@ struct ContentView: View {
                         ProgressView("Loading...")
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                     } else if selectedAppFeature.selectedView == .reviews {
-                        ReviewView(reviews: selectedAppFeature.reviews)
-                            .frame(maxWidth: .infinity)
-                            .frame(maxHeight: .infinity)
-                            .border(.green)
+                        ReviewView(
+                            reviews: selectedAppFeature.reviews,
+                            respondingToReviewId: selectedAppFeature.respondingToReviewId,
+                            responseText: selectedAppFeature.responseText,
+                            isSubmittingResponse: selectedAppFeature.isSubmittingResponse,
+                            responseError: selectedAppFeature.responseError,
+                            onStartResponding: { reviewId in
+                                store.send(.appFeature(.applicationFeature(.element(id: selectedAppId, action: .startRespondingToReview(reviewId)))))
+                            },
+                            onCancelResponse: {
+                                store.send(.appFeature(.applicationFeature(.element(id: selectedAppId, action: .cancelResponse))))
+                            },
+                            onUpdateResponseText: { text in
+                                store.send(.appFeature(.applicationFeature(.element(id: selectedAppId, action: .updateResponseText(text)))))
+                            },
+                            onSubmitResponse: {
+                                store.send(.appFeature(.applicationFeature(.element(id: selectedAppId, action: .submitResponse))))
+                            },
+                            onClearError: {
+                                store.send(.appFeature(.applicationFeature(.element(id: selectedAppId, action: .clearResponseError))))
+                            }
+                        )
+                        .frame(maxWidth: .infinity)
+                        .frame(maxHeight: .infinity)
+                        .border(.green)
                     } else {
                         AppInfoView(appInfos: selectedAppFeature.appInfos)
                             .frame(maxWidth: .infinity)
@@ -96,6 +117,15 @@ struct ContentView: View {
 
 struct ReviewView: View {
     let reviews: [Review]
+    let respondingToReviewId: String?
+    let responseText: String
+    let isSubmittingResponse: Bool
+    let responseError: String?
+    let onStartResponding: (String) -> Void
+    let onCancelResponse: () -> Void
+    let onUpdateResponseText: (String) -> Void
+    let onSubmitResponse: () -> Void
+    let onClearError: () -> Void
     
     var body: some View {
         ScrollView {
@@ -106,33 +136,154 @@ struct ReviewView: View {
                         .padding()
                 } else {
                     ForEach(reviews) { review in
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                Text(review.title)
-                                    .font(.headline)
-                                Spacer()
-                                Text("★ \(review.rating)")
-                                    .foregroundColor(.orange)
-                            }
-                            Text(review.body)
-                                .font(.body)
-                                .foregroundColor(.secondary)
-                            HStack {
-                                Text("By: \(review.reviewerNickname)")
-                                    .font(.caption)
-                                Spacer()
-                                Text(review.createdDate, style: .date)
-                                    .font(.caption)
-                            }
-                        }
-                        .padding()
-                        .background(Color.gray.opacity(0.1))
-                        .cornerRadius(8)
+                        ReviewCardView(
+                            review: review,
+                            isRespondingToThis: respondingToReviewId == review.id,
+                            responseText: responseText,
+                            isSubmittingResponse: isSubmittingResponse,
+                            responseError: responseError,
+                            onStartResponding: { onStartResponding(review.id) },
+                            onCancelResponse: onCancelResponse,
+                            onUpdateResponseText: onUpdateResponseText,
+                            onSubmitResponse: onSubmitResponse,
+                            onClearError: onClearError
+                        )
                     }
                 }
             }
             .padding()
         }
+    }
+}
+
+struct ReviewCardView: View {
+    let review: Review
+    let isRespondingToThis: Bool
+    let responseText: String
+    let isSubmittingResponse: Bool
+    let responseError: String?
+    let onStartResponding: () -> Void
+    let onCancelResponse: () -> Void
+    let onUpdateResponseText: (String) -> Void
+    let onSubmitResponse: () -> Void
+    let onClearError: () -> Void
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            // Review content
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text(review.title)
+                        .font(.headline)
+                    Spacer()
+                    Text("★ \(review.rating)")
+                        .foregroundColor(.orange)
+                }
+                Text(review.body)
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                HStack {
+                    Text("By: \(review.reviewerNickname)")
+                        .font(.caption)
+                    Spacer()
+                    Text(review.createdDate, style: .date)
+                        .font(.caption)
+                }
+            }
+            
+            // Existing response or response input
+            if let response = review.response {
+                // Show existing response
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text("Your Response")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                        Spacer()
+                        Text(response.state.rawValue)
+                            .font(.caption)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(response.state == .published ? Color.green.opacity(0.2) : Color.orange.opacity(0.2))
+                            .cornerRadius(4)
+                    }
+                    Text(response.responseBody)
+                        .font(.body)
+                        .foregroundColor(.primary)
+                    Text("Last modified: \(response.lastModifiedDate, style: .date)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .padding()
+                .background(Color.blue.opacity(0.1))
+                .cornerRadius(8)
+            } else if isRespondingToThis {
+                // Response input interface
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Respond to this review")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                    
+                    TextEditor(text: Binding(
+                        get: { responseText },
+                        set: onUpdateResponseText
+                    ))
+                    .frame(minHeight: 80)
+                    .padding(8)
+                    .background(Color.gray.opacity(0.1))
+                    .cornerRadius(8)
+                    
+                    // Error display
+                    if let error = responseError {
+                        HStack {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .foregroundColor(.red)
+                            Text(error)
+                                .foregroundColor(.red)
+                                .font(.caption)
+                            Spacer()
+                            Button("Dismiss") {
+                                onClearError()
+                            }
+                            .font(.caption)
+                        }
+                        .padding(8)
+                        .background(Color.red.opacity(0.1))
+                        .cornerRadius(4)
+                    }
+                    
+                    HStack {
+                        Button("Cancel", action: onCancelResponse)
+                            .buttonStyle(.bordered)
+                        
+                        Spacer()
+                        
+                        Button("Submit Response") {
+                            onSubmitResponse()
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .disabled(responseText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isSubmittingResponse)
+                        
+                        if isSubmittingResponse {
+                            ProgressView()
+                                .scaleEffect(0.8)
+                        }
+                    }
+                }
+                .padding()
+                .background(Color.blue.opacity(0.1))
+                .cornerRadius(8)
+            } else {
+                // Show respond button
+                Button("Respond to Review") {
+                    onStartResponding()
+                }
+                .buttonStyle(.bordered)
+            }
+        }
+        .padding()
+        .background(Color.gray.opacity(0.1))
+        .cornerRadius(8)
     }
 }
 
