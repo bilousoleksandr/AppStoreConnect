@@ -61,37 +61,38 @@ struct ContentView: View {
                     .padding(.horizontal)
                     
                     // Content based on selected view
-                    if selectedAppFeature.isLoading {
+                    if (selectedAppFeature.selectedView == .reviews && selectedAppFeature.reviews.isLoading) ||
+                       (selectedAppFeature.selectedView == .appInfo && selectedAppFeature.appInfo.isLoading) {
                         ProgressView("Loading...")
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                     } else if selectedAppFeature.selectedView == .reviews {
                         ReviewView(
-                            reviews: selectedAppFeature.reviews,
-                            respondingToReviewId: selectedAppFeature.respondingToReviewId,
-                            responseText: selectedAppFeature.responseText,
-                            isSubmittingResponse: selectedAppFeature.isSubmittingResponse,
-                            responseError: selectedAppFeature.responseError,
+                            reviews: selectedAppFeature.reviews.reviews,
+                            respondingToReviewId: selectedAppFeature.reviews.respondingToReviewId,
+                            responseText: selectedAppFeature.reviews.responseText,
+                            isSubmittingResponse: selectedAppFeature.reviews.isSubmittingResponse,
+                            responseError: selectedAppFeature.reviews.responseError,
                             onStartResponding: { reviewId in
-                                store.send(.appFeature(.applicationFeature(.element(id: selectedAppId, action: .startRespondingToReview(reviewId)))))
+                                store.send(.appFeature(.applicationFeature(.element(id: selectedAppId, action: .reviews(.startRespondingToReview(reviewId))))))
                             },
                             onCancelResponse: {
-                                store.send(.appFeature(.applicationFeature(.element(id: selectedAppId, action: .cancelResponse))))
+                                store.send(.appFeature(.applicationFeature(.element(id: selectedAppId, action: .reviews(.cancelResponse)))))
                             },
                             onUpdateResponseText: { text in
-                                store.send(.appFeature(.applicationFeature(.element(id: selectedAppId, action: .updateResponseText(text)))))
+                                store.send(.appFeature(.applicationFeature(.element(id: selectedAppId, action: .reviews(.updateResponseText(text))))))
                             },
                             onSubmitResponse: {
-                                store.send(.appFeature(.applicationFeature(.element(id: selectedAppId, action: .submitResponse))))
+                                store.send(.appFeature(.applicationFeature(.element(id: selectedAppId, action: .reviews(.submitResponse(selectedAppFeature.application.id))))))
                             },
                             onClearError: {
-                                store.send(.appFeature(.applicationFeature(.element(id: selectedAppId, action: .clearResponseError))))
+                                store.send(.appFeature(.applicationFeature(.element(id: selectedAppId, action: .reviews(.clearResponseError)))))
                             }
                         )
                         .frame(maxWidth: .infinity)
                         .frame(maxHeight: .infinity)
                         .border(.green)
                     } else {
-                        AppInfoView(appInfos: selectedAppFeature.appInfos)
+                        AppInfoView(appInfos: selectedAppFeature.appInfo.appInfos)
                             .frame(maxWidth: .infinity)
                             .frame(maxHeight: .infinity)
                             .border(.orange)
